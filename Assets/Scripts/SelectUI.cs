@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 [System.Serializable]
@@ -13,6 +14,7 @@ public struct UIKey
 public class SelectUI : MonoBehaviour
 {
     public string currentKey;
+    public UnityEvent onSelect = new UnityEvent();
 
     [SerializeField] private UIKey[] _uis;
 
@@ -39,13 +41,13 @@ public class SelectUI : MonoBehaviour
     {
         string key = this._uis[index].key;
         this.currentKey = key;
+        this.onSelect.Invoke();
 
         // 色適用
         for(int i = 0; i < this._uis.Length; i++)
         {
             Image uiImage = this._uis[i].ui.GetComponent<Image>();
             float alpha = index == i ? .3f : .1f;
-            Debug.Log($"{i} {index}");
             Color crr = uiImage.color;
             uiImage.color = new Color(crr.r, crr.g, crr.b, alpha);
         }
