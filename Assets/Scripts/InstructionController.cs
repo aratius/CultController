@@ -19,6 +19,7 @@ public class InstructionController : MonoBehaviour
     [SerializeField] private DropDownUI _dropDownUI;
     [SerializeField] private GameObject _barHorizontal;
     [SerializeField] private GameObject _barVertical;
+    [SerializeField] private GameObject _ripples;
     [SerializeField] private GameObject _mouseFollwerPrefab;
 
     private TouchManager _touchManager = new TouchManager();
@@ -55,10 +56,13 @@ public class InstructionController : MonoBehaviour
             GameObject go = this.gameObject;
             if(shapeKey == "barHorizontal")
             {
-                go = this._CreateBarHorizontal(instructionKey, this._mouseFollower.transform.position.x);
+                go = this._CreateBarHorizontal(instructionKey);
             } else if (shapeKey == "barVertical")
             {
-                go = this._CreateBarVertical(instructionKey, this._mouseFollower.transform.position.y);
+                go = this._CreateBarVertical(instructionKey);
+            } else if (shapeKey == "ripples")
+            {
+                go = this._CreateRipples(instructionKey);
             }
 
             if(go != this.gameObject) {
@@ -94,6 +98,9 @@ public class InstructionController : MonoBehaviour
                 {
                     if(worldPos.x < 0) go.GetComponent<BarVertical>().ToRight();
                     else go.GetComponent<BarVertical>().ToLeft();
+                } else if (key == "ripples")
+                {
+                    go.GetComponent<Ripples>().Spread();
                 }
             }
         } else
@@ -126,6 +133,10 @@ public class InstructionController : MonoBehaviour
             {
                 pos.x = worldPos.x;
                 pos.y = 0;
+            } else if (key == "ripples")
+            {
+                pos.x = worldPos.x;
+                pos.y = worldPos.y;
             }
             go.transform.position = pos;
         }
@@ -136,7 +147,7 @@ public class InstructionController : MonoBehaviour
     /// </summary>
     /// <param name="instruction"></param>
     /// <param name="x"></param>
-    private GameObject _CreateBarHorizontal(string instruction, float x)
+    private GameObject _CreateBarHorizontal(string instruction)
     {
         return Instantiate(this._barHorizontal, this.transform);
     }
@@ -146,9 +157,14 @@ public class InstructionController : MonoBehaviour
     /// </summary>
     /// <param name="instruction"></param>
     /// <param name="y"></param>
-    private GameObject _CreateBarVertical(string instruction, float y)
+    private GameObject _CreateBarVertical(string instruction)
     {
         return Instantiate(this._barVertical, this.transform);
+    }
+
+    private GameObject _CreateRipples(string instruction)
+    {
+        return Instantiate(this._ripples, this.transform);
     }
 
 }
