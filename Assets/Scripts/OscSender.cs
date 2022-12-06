@@ -9,15 +9,20 @@ struct OscClientData {
     public int port;
 }
 
+[System.Serializable]
+struct OscClientsData {
+    public OscClientData[] clients;
+}
+
 /// <summary>
 /// Osc sender
 /// </summary>
 public class OscSender : SingletonMonoBehaviour<OscSender>
 {
 
-    [SerializeField] private OscClientData[] _clientsData;
+    [SerializeField] private OscClientsData[] _clientsData;
 
-    private List<OscClient> _clients = new List<OscClient>();
+    private List<List<OscClient>> _clients = new List<List<OscClient>>();
 
     /// <summary>
     /// clients length
@@ -29,9 +34,13 @@ public class OscSender : SingletonMonoBehaviour<OscSender>
 
     void Awake()
     {
-        foreach (OscClientData data in this._clientsData)
+        foreach (OscClientsData group in this._clientsData)
         {
-            this._clients.Add(new OscClient(data.ip, data.port));
+            this._clients.Add(new List<OscClient>());
+            foreach(OscClientData data in group.clients)
+            {
+                this._clients[this._clients.Count-1].Add(new OscClient(data.ip, data.port));
+            }
         }
     }
 
@@ -43,7 +52,10 @@ public class OscSender : SingletonMonoBehaviour<OscSender>
     /// <typeparam name="T"></typeparam>
     public void Send(int index, string address, int data)
     {
-        this._clients[index].Send(address, data);
+        foreach(OscClient client in this._clients[index])
+        {
+            client.Send(address, data);
+        }
     }
 
     /// <summary>
@@ -54,7 +66,10 @@ public class OscSender : SingletonMonoBehaviour<OscSender>
     /// <typeparam name="T"></typeparam>
     public void Send(int index, string address, string data)
     {
-        this._clients[index].Send(address, data);
+        foreach(OscClient client in this._clients[index])
+        {
+            client.Send(address, data);
+        }
     }
 
 }

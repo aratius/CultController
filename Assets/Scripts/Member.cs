@@ -55,6 +55,10 @@ public class Member : MonoBehaviour
         {
             this._DoColor(color);
             OscSender.Instance.Send(this.index, $"/{instruction}", 0);
+            // TODO: 1.8sec後にLEDとmaxへOSC
+            Utils.DoItAfter(() => {
+                OscSender.Instance.Send(this.index, $"/tone", 0);
+            }, 1800);
         }
     }
 

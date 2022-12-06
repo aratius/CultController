@@ -3111,8 +3111,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _clientsData:
-  - ip: 127.0.0.1
-    port: 10000
+  - clients:
+    - ip: 192.168.0.10
+      port: 10000
+    - ip: 127.0.0.1
+      port: 8000
 --- !u!4 &1638622057
 Transform:
   m_ObjectHideFlags: 0
