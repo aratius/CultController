@@ -378,9 +378,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Member
       objectReference: {fileID: 0}
+    - target: {fileID: 3076822295582272494, guid: f7de2028f9223409aa1e5380d97db345, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3076822295582272495, guid: f7de2028f9223409aa1e5380d97db345, type: 3}
       propertyPath: index
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7de2028f9223409aa1e5380d97db345, type: 3}
@@ -2995,9 +2999,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Member
       objectReference: {fileID: 0}
+    - target: {fileID: 3076822295582272494, guid: f7de2028f9223409aa1e5380d97db345, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3076822295582272495, guid: f7de2028f9223409aa1e5380d97db345, type: 3}
       propertyPath: index
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7de2028f9223409aa1e5380d97db345, type: 3}
@@ -3112,8 +3120,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _clientsData:
   - clients:
-    - ip: 192.168.0.10
-      port: 10000
+    - ip: 192.168.1.101
+      port: 10001
+    - ip: 127.0.0.1
+      port: 8000
+  - clients:
+    - ip: 192.168.1.102
+      port: 10002
+    - ip: 127.0.0.1
+      port: 8000
+  - clients:
+    - ip: 192.168.1.103
+      port: 10003
     - ip: 127.0.0.1
       port: 8000
 --- !u!4 &1638622057
