@@ -2713,7 +2713,7 @@ MonoBehaviour:
     - ip: 192.168.1.104
       port: 10001
     - ip: 127.0.0.1
-      port: 10000
+      port: 8000
   - clients:
     - ip: 192.168.1.102
       port: 10002
