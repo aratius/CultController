@@ -17,7 +17,7 @@ public class Ripples : MonoBehaviour
     void Update()
     {
       Vector2 localScale = this.transform.localScale;
-      localScale += new Vector2(_vel, _vel) * .1f;
+      localScale += new Vector2(_vel, _vel) * SpeedUI.Instance.speed * .1f;
       this.transform.localScale = localScale;
       this._material.SetFloat("_Scale", localScale.x);
       if(localScale.x > 50f) Destroy(this.gameObject);

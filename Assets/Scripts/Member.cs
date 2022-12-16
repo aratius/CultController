@@ -23,34 +23,34 @@ public class Member : MonoBehaviour
 
     Color color = Color.white;
 
-    if (instruction == "leftHandUp")
+    if (instruction == "handsUp")
     {
       color = new Color(1f, 0f, 0f, 1f);
 
     }
-    else if (instruction == "leftHandDown")
+    else if (instruction == "handsDown")
     {
-      color = new Color(1f, 0f, 0f, 1f);
-
-    }
-    else if (instruction == "rightHandUp")
-    {
-      color = new Color(1f, 0f, 0f, 1f);
-
-    }
-    else if (instruction == "rightHandDown")
-    {
-      color = new Color(1f, 0f, 0f, 1f);
+      color = new Color(0f, 1f, 0f, 1f);
 
     }
     else if (instruction == "standUp")
     {
-      color = new Color(1f, 0f, 0f, 1f);
+      color = new Color(0f, 0f, 1f, 1f);
 
     }
-    else if (instruction == "standDown")
+    else if (instruction == "sitDown")
     {
-      color = new Color(1f, 0f, 0f, 1f);
+      color = new Color(1f, 1f, 0f, 1f);
+
+    }
+    else if (instruction == "tutorial")
+    {
+      color = new Color(1f, 0f, 1f, 1f);
+
+    }
+    else if (instruction == "finish")
+    {
+      color = new Color(0f, 1f, 1f, 1f);
 
     }
     else
