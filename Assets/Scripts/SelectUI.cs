@@ -28,6 +28,7 @@ public class SelectUI : MonoBehaviour
             ui.onClick.AddListener(() => {
                 this._OnClick(index);
             });
+            this._OnClick(0);
         }
     }
 

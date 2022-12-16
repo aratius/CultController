@@ -25,8 +25,8 @@ public class DropDownUI : MonoBehaviour
     public void On()
     {
         this.isActive = true;
-            Color crr = this._button.GetComponent<Image>().color;
-            this._button.GetComponent<Image>().color = new Color(crr.r, crr.g, crr.b, .3f);
+        Color crr = this._button.GetComponent<Image>().color;
+        this._button.GetComponent<Image>().color = new Color(crr.r, crr.g, crr.b, .3f);
     }
 
     public void Off()

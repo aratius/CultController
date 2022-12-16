@@ -16,19 +16,20 @@ public class InstructionController : MonoBehaviour
 
     [SerializeField] private SelectUI _instructionUI;
     [SerializeField] private SelectUI _shapeUI;
-    [SerializeField] private DropDownUI _dropDownUI;
     [SerializeField] private GameObject _barHorizontal;
     [SerializeField] private GameObject _barVertical;
     [SerializeField] private GameObject _ripples;
     [SerializeField] private GameObject _mouseFollwerPrefab;
+    [SerializeField] private GetTouchUI _touchUI;
 
-    private TouchManager _touchManager = new TouchManager();
+    private TouchManager _touchManager;
     private GameObject _mouseFollower;
     private Shape _currentShape;
     private bool isActiveTouch = false;
 
     void Start()
     {
+        this._touchManager = new TouchManager(this._touchUI);
         this._touchManager.onTouchStart.AddListener(this._OnTouchStart);
         this._touchManager.onTouchEnd.AddListener(this._OnTouchEnd);
         this._touchManager.onTouchMove.AddListener(this._OnTouchMove);
@@ -49,29 +50,27 @@ public class InstructionController : MonoBehaviour
         Vector2 worldPos = (position / new Vector2(1920f, 1080f) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(9f, 5f);
         this._mouseFollower.transform.position = worldPos;
 
-        if(this._dropDownUI.isActive) {
-            string shapeKey = this._shapeUI.currentKey;
-            string instructionKey = this._instructionUI.currentKey;
+        string shapeKey = this._shapeUI.currentKey;
+        string instructionKey = this._instructionUI.currentKey;
 
-            GameObject go = this.gameObject;
-            if(shapeKey == "barHorizontal")
-            {
-                go = this._CreateBarHorizontal(instructionKey);
-            } else if (shapeKey == "barVertical")
-            {
-                go = this._CreateBarVertical(instructionKey);
-            } else if (shapeKey == "ripples")
-            {
-                go = this._CreateRipples(instructionKey);
-            }
-
-            if(go != this.gameObject) {
-                go.tag = instructionKey;
-                this._currentShape = new Shape(go, shapeKey);
-            }
-
-            this.isActiveTouch = true;
+        GameObject go = this.gameObject;
+        if(shapeKey == "barHorizontal")
+        {
+            go = this._CreateBarHorizontal(instructionKey);
+        } else if (shapeKey == "barVertical")
+        {
+            go = this._CreateBarVertical(instructionKey);
+        } else if (shapeKey == "ripples")
+        {
+            go = this._CreateRipples(instructionKey);
         }
+
+        if(go != this.gameObject) {
+            go.tag = instructionKey;
+            this._currentShape = new Shape(go, shapeKey);
+        }
+
+        this.isActiveTouch = true;
     }
 
     /// <summary>
@@ -85,7 +84,7 @@ public class InstructionController : MonoBehaviour
 
         if(this._touchManager.isMoved)
         {
-            if(this.isActiveTouch && this._dropDownUI.isActive)
+            if(this.isActiveTouch)
             {
                 GameObject go = this._currentShape.go;
                 string key = this._currentShape.key;
@@ -121,7 +120,7 @@ public class InstructionController : MonoBehaviour
         Vector2 worldPos = (position / new Vector2(1920f, 1080f) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(9f, 5f);
         this._mouseFollower.transform.position = worldPos;
 
-        if(this.isActiveTouch && this._dropDownUI.isActive) {
+        if(this.isActiveTouch) {
             GameObject go = this._currentShape.go;
             Vector2 pos = go.transform.position;
             string key = this._currentShape.key;

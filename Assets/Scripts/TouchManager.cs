@@ -12,6 +12,23 @@ public class TouchManager {
 
     private Vector2 _touchStartPosition = new Vector2(0, 0);
     public bool isMoved = false;
+    private bool _isTouching = false;
+
+    public TouchManager(GetTouchUI container)
+    {
+        container.onGetTouchDown.AddListener(() => {
+            if (Application.isEditor) {
+                this.onTouchStart.Invoke(Input.mousePosition);
+                this._touchStartPosition = Input.mousePosition;
+            } else if (Input.touchCount > 0) {
+                Touch touch = Input.GetTouch(0);
+                this.onTouchStart.Invoke(touch.position);
+                this._touchStartPosition = touch.position;
+            }
+            this.isMoved = false;
+            this._isTouching = true;
+        });
+    }
 
     /// <summary>
     ///
@@ -20,21 +37,19 @@ public class TouchManager {
 
         // エディタ
         if (Application.isEditor) {
-            // 押した瞬間
-            if (Input.GetMouseButtonDown(0)) {
-                this.onTouchStart.Invoke(Input.mousePosition);
-                this._touchStartPosition = Input.mousePosition;
-                this.isMoved = false;
-            }
 
             // 離した瞬間
             if (Input.GetMouseButtonUp(0)) {
-                this.onTouchEnd.Invoke(Input.mousePosition);
+                if(this._isTouching)
+                {
+                    this.onTouchEnd.Invoke(Input.mousePosition);
+                }
                 this._touchStartPosition = new Vector2(-999f, -999f);
+                this._isTouching = false;
             }
 
             // 押しっぱなし
-            if (Input.GetMouseButton(0)) {
+            if (Input.GetMouseButton(0) && this._isTouching) {
                 this.onTouchMove.Invoke(Input.mousePosition);
                 float dist = Vector2.Distance(Input.mousePosition, this._touchStartPosition);
                 if(dist > 10) this.isMoved = true;
@@ -44,16 +59,15 @@ public class TouchManager {
         } else {
             if (Input.touchCount > 0) {
                 Touch touch = Input.GetTouch(0);
-                if(touch.phase == TouchPhase.Began)
+                if (touch.phase == TouchPhase.Ended)
                 {
-                    this.onTouchStart.Invoke(touch.position);
-                    this._touchStartPosition = touch.position;
-                    this.isMoved = false;
-                } else if (touch.phase == TouchPhase.Ended)
-                {
-                    this.onTouchEnd.Invoke(touch.position);
+                    if(this._isTouching)
+                    {
+                        this.onTouchEnd.Invoke(touch.position);
+                    }
                     this._touchStartPosition = new Vector2(-999f, -999f);
-                } else if (touch.phase == TouchPhase.Moved)
+                    this._isTouching = false;
+                } else if (touch.phase == TouchPhase.Moved && this._isTouching)
                 {
                     this.onTouchMove.Invoke(touch.position);
                     float dist = Vector2.Distance(touch.position, this._touchStartPosition);
