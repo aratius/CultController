@@ -9,11 +9,12 @@ using DG.Tweening;
 public class Member : MonoBehaviour
 {
   public int index = -999;
+  [SerializeField] private TextMesh _textMesh;
   private readonly Color _BASECOLOR = Color.white;
 
-  public void Init(int i)
+  void Start()
   {
-    this.index = i;
+    this._textMesh.text = this.index.ToString();
   }
 
   void OnTriggerEnter2D(Collider2D other)
@@ -70,12 +71,13 @@ public class Member : MonoBehaviour
       // TODO: 1.8sec後にLEDとmaxへOSC
       Utils.DoItAfter(() =>
       {
-        OscSender.Instance.Send(this.index, $"/tone", 1);
+        OscSender.Instance.Send(this.index, $"/tone", 1);  // maxへ
+        OscSender.Instance.Send(this.index, $"/led/{this.index}", 1);  // TDへ
         Utils.DoItAfter(() =>
         {
           OscSender.Instance.Send(this.index, $"/tone", 0);
         }, 100);
-      }, 2100);
+      }, 1800);
     }
   }
 
