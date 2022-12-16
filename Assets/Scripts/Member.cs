@@ -53,6 +53,10 @@ public class Member : MonoBehaviour
       color = new Color(0f, 1f, 1f, 1f);
 
     }
+    else if (instruction == "stop")
+    {
+      color = new Color(0f, 0f, 0f, 1f);
+    }
     else
     {
       Debug.LogWarning("undefined instruction");

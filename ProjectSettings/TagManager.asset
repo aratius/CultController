@@ -10,6 +10,7 @@ TagManager:
   - handsDown
   - tutorial
   - finish
+  - stop
   layers:
   - Default
   - TransparentFX
