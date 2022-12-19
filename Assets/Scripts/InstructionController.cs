@@ -47,7 +47,7 @@ public class InstructionController : MonoBehaviour
     private void _OnTouchStart(Vector2 position)
     {
         this._mouseFollower = Instantiate(this._mouseFollwerPrefab, this.transform);
-        Vector2 worldPos = (position / new Vector2(1920f, 1080f) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(9f, 5f);
+        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(9f, 5f);
         this._mouseFollower.transform.position = worldPos;
 
         string shapeKey = this._shapeUI.currentKey;
@@ -78,7 +78,7 @@ public class InstructionController : MonoBehaviour
     /// </summary>
     private void _OnTouchEnd(Vector2 position)
     {
-        Vector2 worldPos = (position / new Vector2(1920f, 1080f) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(9f, 5f);
+        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(9f, 5f);
         string shapeKey = this._shapeUI.currentKey;
         string instructionKey = this._instructionUI.currentKey;
 
@@ -117,7 +117,7 @@ public class InstructionController : MonoBehaviour
     /// <param name="position"></param>
     private void _OnTouchMove(Vector2 position)
     {
-        Vector2 worldPos = (position / new Vector2(1920f, 1080f) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(9f, 5f);
+        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(9f, 5f);
         this._mouseFollower.transform.position = worldPos;
 
         if(this.isActiveTouch) {
