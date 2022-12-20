@@ -10,7 +10,7 @@ public class SpeedUI : SingletonMonoBehaviour<SpeedUI>
 
     public float speed {
         get {
-            return this._slider.value;
+            return this._slider.value * 2f;
         }
     }
 

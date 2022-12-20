@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 struct Shape {
     public GameObject go;
     public string key;
@@ -23,8 +24,8 @@ public class InstructionController : MonoBehaviour
     [SerializeField] private GetTouchUI _touchUI;
 
     private TouchManager _touchManager;
-    private GameObject _mouseFollower;
-    private Shape _currentShape;
+    private GameObject? _mouseFollower;
+    private Shape? _currentShape;
     private bool isActiveTouch = false;
 
     void Start()
@@ -33,7 +34,6 @@ public class InstructionController : MonoBehaviour
         this._touchManager.onTouchStart.AddListener(this._OnTouchStart);
         this._touchManager.onTouchEnd.AddListener(this._OnTouchEnd);
         this._touchManager.onTouchMove.AddListener(this._OnTouchMove);
-        this._touchManager.onTouchCancel.AddListener(this._OnTouchCancel);
     }
 
     void Update()
@@ -47,8 +47,9 @@ public class InstructionController : MonoBehaviour
     /// <param name="position"></param>
     private void _OnTouchStart(Vector2 position)
     {
+        Debug.Log("start");
         this._mouseFollower = Instantiate(this._mouseFollwerPrefab, this.transform);
-        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(Camera.main.orthographicSize * (float)Screen.width/(float)Screen.height, 5f);
+        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(Camera.main.orthographicSize * (float)Screen.width/(float)Screen.height, Camera.main.orthographicSize);
         this._mouseFollower.transform.position = worldPos;
 
         string shapeKey = this._shapeUI.currentKey;
@@ -80,7 +81,8 @@ public class InstructionController : MonoBehaviour
     /// </summary>
     private void _OnTouchEnd(Vector2 position)
     {
-        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(Camera.main.orthographicSize * (float)Screen.width/(float)Screen.height, 5f);
+        if(this._currentShape?.go == null || this._mouseFollower == null) return;
+        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(Camera.main.orthographicSize * (float)Screen.width/(float)Screen.height, Camera.main.orthographicSize);
         string shapeKey = this._shapeUI.currentKey;
         string instructionKey = this._instructionUI.currentKey;
 
@@ -88,8 +90,8 @@ public class InstructionController : MonoBehaviour
         {
             if(this.isActiveTouch)
             {
-                GameObject go = this._currentShape.go;
-                string key = this._currentShape.key;
+                GameObject go = this._currentShape?.go;
+                string key = this._currentShape?.key;
 
                 if(key == "barHorizontal")
                 {
@@ -106,7 +108,7 @@ public class InstructionController : MonoBehaviour
             }
         } else
         {
-            Destroy(this._currentShape.go);
+            Destroy(this._currentShape?.go);
         }
 
         Destroy(this._mouseFollower);
@@ -119,13 +121,14 @@ public class InstructionController : MonoBehaviour
     /// <param name="position"></param>
     private void _OnTouchMove(Vector2 position)
     {
-        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(Camera.main.orthographicSize * (float)Screen.width/(float)Screen.height, 5f);
+        if(this._currentShape?.go == null || this._mouseFollower == null) return;
+        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(Camera.main.orthographicSize * (float)Screen.width/(float)Screen.height, Camera.main.orthographicSize);
         this._mouseFollower.transform.position = worldPos;
 
         if(this.isActiveTouch) {
-            GameObject go = this._currentShape.go;
+            GameObject go = this._currentShape?.go;
             Vector2 pos = go.transform.position;
-            string key = this._currentShape.key;
+            string key = this._currentShape?.key;
             if(key == "barHorizontal")
             {
                 pos.x = 0;
@@ -141,16 +144,23 @@ public class InstructionController : MonoBehaviour
             }
             go.transform.position = pos;
         }
-    }
 
-    /// <summary>
-    ///
-    /// </summary>
-    private void _OnTouchCancel()
-    {
-        Destroy(this._currentShape.go);
-        Destroy(this._mouseFollower);
-        this.isActiveTouch = false;
+        float widthMax = Camera.main.orthographicSize * (float)Screen.width/(float)Screen.height;
+        float heightMax = Camera.main.orthographicSize;
+        Debug.Log( $"move {widthMax} {worldPos.x}");
+        if(
+            worldPos.x > widthMax - .5f ||
+            worldPos.x < -widthMax + .5f ||
+            worldPos.y > heightMax - .5f ||
+            worldPos.y < -heightMax + .5f
+        )
+        {
+            Debug.Log("des --------------");
+            Debug.Log("des --------------");
+            Debug.Log("des --------------");
+            Destroy(this._currentShape?.go);
+            Destroy(this._mouseFollower);
+        }
     }
 
 

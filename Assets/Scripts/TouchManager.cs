@@ -10,7 +10,6 @@ public class TouchManager {
     public UnityEvent<Vector2> onTouchStart = new UnityEvent<Vector2>();
     public UnityEvent<Vector2> onTouchMove = new UnityEvent<Vector2>();
     public UnityEvent<Vector2> onTouchEnd = new UnityEvent<Vector2>();
-    public UnityEvent onTouchCancel = new UnityEvent();
 
     private Vector2 _touchStartPosition = new Vector2(0, 0);
     public bool isMoved = false;
@@ -35,10 +34,6 @@ public class TouchManager {
                     this.isMoved = false;
                     this._isTouching = true;
                     break;
-                } else if (Input.touchCount > 1)
-                {
-                    this.onTouchCancel.Invoke();
-                    this._isTouching = false;
                 }
                 else
                 {
@@ -72,7 +67,7 @@ public class TouchManager {
 
         // 端末
         } else {
-            if (Input.touchCount > 0) {
+            if (Input.touchCount == 1) {
                 Touch touch = Input.GetTouch(0);
                 if (touch.phase == TouchPhase.Ended)
                 {
