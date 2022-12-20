@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// Touch manager
@@ -9,6 +10,7 @@ public class TouchManager {
     public UnityEvent<Vector2> onTouchStart = new UnityEvent<Vector2>();
     public UnityEvent<Vector2> onTouchMove = new UnityEvent<Vector2>();
     public UnityEvent<Vector2> onTouchEnd = new UnityEvent<Vector2>();
+    public UnityEvent onTouchCancel = new UnityEvent();
 
     private Vector2 _touchStartPosition = new Vector2(0, 0);
     public bool isMoved = false;
@@ -16,17 +18,33 @@ public class TouchManager {
 
     public TouchManager(GetTouchUI container)
     {
-        container.onGetTouchDown.AddListener(() => {
-            if (Application.isEditor) {
-                this.onTouchStart.Invoke(Input.mousePosition);
-                this._touchStartPosition = Input.mousePosition;
-            } else if (Input.touchCount > 0) {
-                Touch touch = Input.GetTouch(0);
-                this.onTouchStart.Invoke(touch.position);
-                this._touchStartPosition = touch.position;
+        container.onGetTouchDown.AddListener(async(Vector2 p) => {
+            while(true)
+            {
+                if (Application.isEditor) {
+                    this.onTouchStart.Invoke(p);
+                    this._touchStartPosition = p;
+                    this.isMoved = false;
+                    this._isTouching = true;
+                    break;
+                } else if (Input.touchCount == 1) {
+                    await UniTask.WaitForFixedUpdate();
+                    Touch touch = Input.GetTouch(0);
+                    this._touchStartPosition = p;
+                    this.onTouchStart.Invoke(p);
+                    this.isMoved = false;
+                    this._isTouching = true;
+                    break;
+                } else if (Input.touchCount > 1)
+                {
+                    this.onTouchCancel.Invoke();
+                    this._isTouching = false;
+                }
+                else
+                {
+                    await UniTask.WaitForFixedUpdate();
+                }
             }
-            this.isMoved = false;
-            this._isTouching = true;
         });
     }
 
@@ -40,10 +58,7 @@ public class TouchManager {
 
             // 離した瞬間
             if (Input.GetMouseButtonUp(0)) {
-                if(this._isTouching)
-                {
-                    this.onTouchEnd.Invoke(Input.mousePosition);
-                }
+                if(this._isTouching) this.onTouchEnd.Invoke(Input.mousePosition);
                 this._touchStartPosition = new Vector2(-999f, -999f);
                 this._isTouching = false;
             }
@@ -61,10 +76,7 @@ public class TouchManager {
                 Touch touch = Input.GetTouch(0);
                 if (touch.phase == TouchPhase.Ended)
                 {
-                    if(this._isTouching)
-                    {
-                        this.onTouchEnd.Invoke(touch.position);
-                    }
+                    if(this._isTouching) this.onTouchEnd.Invoke(touch.position);
                     this._touchStartPosition = new Vector2(-999f, -999f);
                     this._isTouching = false;
                 } else if (touch.phase == TouchPhase.Moved && this._isTouching)

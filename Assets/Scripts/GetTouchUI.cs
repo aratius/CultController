@@ -8,10 +8,11 @@ using UnityEngine.EventSystems;
 public class GetTouchUI : MonoBehaviour, IPointerDownHandler
 {
 
-    public UnityEvent onGetTouchDown = new UnityEvent();
+    public UnityEvent<Vector2> onGetTouchDown = new UnityEvent<Vector2>();
 
     public void OnPointerDown(PointerEventData e)
     {
-        this.onGetTouchDown.Invoke();
+        Debug.Log(e.position);
+        this.onGetTouchDown.Invoke(e.position);
     }
 }

@@ -33,6 +33,7 @@ public class InstructionController : MonoBehaviour
         this._touchManager.onTouchStart.AddListener(this._OnTouchStart);
         this._touchManager.onTouchEnd.AddListener(this._OnTouchEnd);
         this._touchManager.onTouchMove.AddListener(this._OnTouchMove);
+        this._touchManager.onTouchCancel.AddListener(this._OnTouchCancel);
     }
 
     void Update()
@@ -47,7 +48,7 @@ public class InstructionController : MonoBehaviour
     private void _OnTouchStart(Vector2 position)
     {
         this._mouseFollower = Instantiate(this._mouseFollwerPrefab, this.transform);
-        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(9f, 5f);
+        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(Camera.main.orthographicSize * (float)Screen.width/(float)Screen.height, 5f);
         this._mouseFollower.transform.position = worldPos;
 
         string shapeKey = this._shapeUI.currentKey;
@@ -67,6 +68,7 @@ public class InstructionController : MonoBehaviour
 
         if(go != this.gameObject) {
             go.tag = instructionKey;
+            go.transform.position = worldPos;
             this._currentShape = new Shape(go, shapeKey);
         }
 
@@ -78,7 +80,7 @@ public class InstructionController : MonoBehaviour
     /// </summary>
     private void _OnTouchEnd(Vector2 position)
     {
-        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(9f, 5f);
+        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(Camera.main.orthographicSize * (float)Screen.width/(float)Screen.height, 5f);
         string shapeKey = this._shapeUI.currentKey;
         string instructionKey = this._instructionUI.currentKey;
 
@@ -107,8 +109,8 @@ public class InstructionController : MonoBehaviour
             Destroy(this._currentShape.go);
         }
 
-        this.isActiveTouch = false;
         Destroy(this._mouseFollower);
+        this.isActiveTouch = false;
     }
 
     /// <summary>
@@ -117,7 +119,7 @@ public class InstructionController : MonoBehaviour
     /// <param name="position"></param>
     private void _OnTouchMove(Vector2 position)
     {
-        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(9f, 5f);
+        Vector2 worldPos = (position / new Vector2(Screen.width, Screen.height) - Vector2.one * .5f) * Vector2.one * 2f * new Vector2(Camera.main.orthographicSize * (float)Screen.width/(float)Screen.height, 5f);
         this._mouseFollower.transform.position = worldPos;
 
         if(this.isActiveTouch) {
@@ -140,6 +142,17 @@ public class InstructionController : MonoBehaviour
             go.transform.position = pos;
         }
     }
+
+    /// <summary>
+    ///
+    /// </summary>
+    private void _OnTouchCancel()
+    {
+        Destroy(this._currentShape.go);
+        Destroy(this._mouseFollower);
+        this.isActiveTouch = false;
+    }
+
 
     /// <summary>
     /// create bar horizontal
