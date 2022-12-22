@@ -65,16 +65,33 @@ public class Member : MonoBehaviour
     {
       this._DoColor(color);
       OscSender.Instance.Send(this.index, $"/{instructionToSend}", 0);
-      // TODO: 1.8sec後にLEDとmaxへOSC
+      OscSender.Instance.Send(this.index, $"/{instructionToSend}", 0);
+      OscSender.Instance.Send(this.index, $"/{instructionToSend}", 0);
+
+      // To TD
+      Utils.DoItAfter(() =>
+      {
+        OscSender.Instance.Send(this.index, $"/stand/{this.index}", this._isStanding ? 1 : 0);  // TDへ
+        OscSender.Instance.Send(this.index, $"/stand/{this.index}", this._isStanding ? 1 : 0);  // TDへ
+        OscSender.Instance.Send(this.index, $"/stand/{this.index}", this._isStanding ? 1 : 0);  // TDへ
+
+        OscSender.Instance.Send(this.index, $"/hands/{this.index}", this._isRaisingHands ? 1 : 0);  // TDへ
+        OscSender.Instance.Send(this.index, $"/hands/{this.index}", this._isRaisingHands ? 1 : 0);  // TDへ
+        OscSender.Instance.Send(this.index, $"/hands/{this.index}", this._isRaisingHands ? 1 : 0);  // TDへ
+      }, 1200);
+
+      // To MAX
       Utils.DoItAfter(() =>
       {
         OscSender.Instance.Send(this.index, $"/tone", 1);  // maxへ
-        OscSender.Instance.Send(this.index, $"/led/{this.index}", 1);  // TDへ
-        Utils.DoItAfter(() =>
-        {
+        OscSender.Instance.Send(this.index, $"/tone", 1);  // maxへ
+        OscSender.Instance.Send(this.index, $"/tone", 1);  // maxへ
+        Utils.DoItAfter(() => {
+          OscSender.Instance.Send(this.index, $"/tone", 0);
+          OscSender.Instance.Send(this.index, $"/tone", 0);
           OscSender.Instance.Send(this.index, $"/tone", 0);
         }, 100);
-      }, 1800);
+      }, 1500);
     }
   }
 
