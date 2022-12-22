@@ -11,6 +11,8 @@ public class Member : MonoBehaviour
   public int index = -999;
   [SerializeField] private TextMesh _textMesh;
   private readonly Color _BASECOLOR = Color.white;
+  private bool _isStanding = false;
+  private bool _isRaisingHands = false;
 
   void Start()
   {
@@ -24,39 +26,34 @@ public class Member : MonoBehaviour
 
     Color color = Color.white;
 
-    if (instruction == "handsUp")
+    string instructionToSend = "";
+
+    if (instruction == "hands")
     {
       color = new Color(1f, 0f, 0f, 1f);
-
+      instructionToSend = this._isRaisingHands ? "handsDown" : "handsUp";
+      this._isRaisingHands = !this._isRaisingHands;
     }
-    else if (instruction == "handsDown")
-    {
-      color = new Color(0f, 1f, 0f, 1f);
-
-    }
-    else if (instruction == "standUp")
+    else if (instruction == "stand")
     {
       color = new Color(0f, 0f, 1f, 1f);
-
-    }
-    else if (instruction == "sitDown")
-    {
-      color = new Color(1f, 1f, 0f, 1f);
-
+      instructionToSend = this._isStanding ? "sitDown" : "standUp";
+      this._isStanding = !this._isStanding;
     }
     else if (instruction == "tutorial")
     {
       color = new Color(1f, 0f, 1f, 1f);
-
+      instructionToSend = instruction;
     }
     else if (instruction == "finish")
     {
       color = new Color(0f, 1f, 1f, 1f);
-
+      instructionToSend = instruction;
     }
     else if (instruction == "stop")
     {
       color = new Color(0f, 0f, 0f, 1f);
+      instructionToSend = instruction;
     }
     else
     {
@@ -67,7 +64,7 @@ public class Member : MonoBehaviour
     if (this.index >= 0)
     {
       this._DoColor(color);
-      OscSender.Instance.Send(this.index, $"/{instruction}", 0);
+      OscSender.Instance.Send(this.index, $"/{instructionToSend}", 0);
       // TODO: 1.8sec後にLEDとmaxへOSC
       Utils.DoItAfter(() =>
       {
