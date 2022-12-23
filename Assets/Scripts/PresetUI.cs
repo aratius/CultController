@@ -5,18 +5,15 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 [System.Serializable]
-public struct UIKey
+public struct PresetKey
 {
   public GameObject ui;
-  public string key;
+  public int index;
 }
 
-public class SelectUI : MonoBehaviour
+public class PresetUI : MonoBehaviour
 {
-  public string currentKey;
-  public UnityEvent onSelect = new UnityEvent();
-
-  [SerializeField] private UIKey[] _uis;
+  [SerializeField] private PresetKey[] _uis;
 
   // Start is called before the first frame update
   void Start()
@@ -27,17 +24,17 @@ public class SelectUI : MonoBehaviour
       int index = i;
       ui.onClick.AddListener(() =>
       {
-        this._OnClick(index);
+        this._OnClick(this._uis[index].index);
       });
-      this._OnClick(0);
     }
+    this._OnClick(0);
   }
 
   private void _OnClick(int index)
   {
-    string key = this._uis[index].key;
-    this.currentKey = key;
-    this.onSelect.Invoke();
+    OscSender.Instance.Send(-1, "/preset", index);
+    OscSender.Instance.Send(-1, "/preset", index);
+    OscSender.Instance.Send(-1, "/preset", index);
 
     // 色適用
     for (int i = 0; i < this._uis.Length; i++)
